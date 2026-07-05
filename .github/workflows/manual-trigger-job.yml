@@ -7,11 +7,15 @@ jobs:
   train:
     runs-on: ubuntu-latest
 
+    env:
+      RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+      WORKSPACE_NAME: ${{ vars.AZURE_WORKSPACE_NAME }}
+
     steps:
       - name: Check out repo
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
-      - name: Install az ml extension
+      - name: Install Azure ML extension
         run: az extension add -n ml -y
 
       - name: Azure login
@@ -24,5 +28,5 @@ jobs:
           az ml job create \
             -f src/job.yml \
             --stream \
-            --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
-            --workspace-name ${{ vars.AZURE_WORKSPACE_NAME }}
+            --resource-group "$RESOURCE_GROUP" \
+            --workspace-name "$WORKSPACE_NAME"
